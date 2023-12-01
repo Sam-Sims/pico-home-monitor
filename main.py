@@ -29,8 +29,13 @@ def publish(topic, value):
     
 while True:
     # check wifi connection
-    if not pico_wifi.isconnected():
-        pico_wifi.connect(config.WIFI_SSID, config.WIFI_PWD, verbose=False, led_toggle=True)
+    if not pico_wifi.is_connected():
+        pico_wifi.led_off()
+        pico_wifi.connect(config.WIFI_SSID, config.WIFI_PWD, verbose=True, led_toggle=True)
+        mqttc.connect()
+        if pico_wifi.is_connected() and mqttc.is_connected():
+            pico_wifi.led_on()
+
     reading = bme.read()
     temp,pres,humid = reading
     print(temp,pres,humid)
